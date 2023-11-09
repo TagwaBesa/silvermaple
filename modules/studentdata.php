@@ -1,5 +1,9 @@
 <?php
+
 include 'config1.php';
+require 'sendmail.php';
+
+// Check if the student is not logged in, then redirect to the login page
 
 $present = 0;
 $absent = 0;
@@ -20,6 +24,21 @@ if (count($result)) {
     $tempnm = $result[0]['name'];
     $tempid = $result[0]['sid'];
     $rollno = $result[0]['rollno'];
+
+
+    $sqlAbsent = "SELECT ispresent FROM attendance WHERE sid = :studentId AND ispresent = 0";
+    $stmtAbsent = $conn->prepare($sqlAbsent);
+    $stmtAbsent->bindParam(':studentId', $studentId, PDO::PARAM_INT);
+    $stmtAbsent->execute();
+    $absentCount = $stmtAbsent->rowCount();
+    
+    if ($absentCount >=3) {
+        // Echo a message once the student has been absent 3 or more times
+        echo "Warning! You have been absent 3 or more times.";
+        checkAttendanceAndNotify($conn);
+    }
+    
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +46,7 @@ if (count($result)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <canvas id="attendanceGraph" width="200" height="100"></canvas>
+   
 </head>
 <body>
 <div class="container">
@@ -151,16 +170,19 @@ if (count($result)) {
                 }
                 ?>
             </table>
+
             <?php
             $tlec = $ttaken - $nottaken;
             $tper = round((100 * $present) / $tlec, 2);
+ 
+
             ?>
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">Summary Of Attendance</h3>
                 </div>
                 <div class="panel-body">
-                    <p>Present Days out of Working Days:&nbsp;<strong><?php echo $present; ?>/<?php echo $tlec; ?></strong></p>
+                    <p>Present Days out of All Days:&nbsp;<strong><?php echo $present; ?>/<?php echo $tlec; ?></strong></p>
                     <p>Attendance Percentage:&nbsp;<strong><?php echo $tper; ?>&nbsp;%</strong></p>
                 </div>
             </div>
@@ -172,6 +194,7 @@ if (count($result)) {
         </div>
     </div>
 </div>
+<canvas id="attendanceGraph" width="200" height="100"></canvas>
 </body>
 </html>
 <?php
@@ -182,7 +205,7 @@ if (count($result)) {
 
 <?php
 // Create a line graph for the specified subject and student
-$subjectId = 3; // Replace with the actual subject ID
+$subjectId = 2; // Replace with the actual subject ID
 $query = "SELECT date, grade FROM attendance
           WHERE id = :subjectId AND sid = :studentId
           ORDER BY date";

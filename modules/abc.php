@@ -28,7 +28,7 @@
             $uid = $result[0]['uid'];
 						$uname = $result[0]['uname'];
 						session_start();
-            // Use $HTTP_SESSION_VARS with PHP 4.0.6 or less
+           
             
                 $_SESSION['islogin'] ="1";
 								$_SESSION['uid'] = $uid;

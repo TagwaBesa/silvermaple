@@ -26,7 +26,5 @@
         color:white;
         text-align: center;
       }
-      .sidebar-wrapper{
-        color: white;
-      }
+      
     </style>

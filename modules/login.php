@@ -50,7 +50,10 @@
       <form class="form-horizontal" action="index.php" method="post" id="studentForm" data-toggle="validator">
         <div class="form-group">
           <label for="rollno" class="control-label">Roll Number</label>
-          <input type="number" class="form-control" id="rollno" maxlength="6" name="rollno" placeholder="Please Enter Student's Roll Number" required>
+      
+        <input type="number" class="form-control" id="rollno" maxlength="6" name="rollno" placeholder="Please Enter Student's Roll Number" required>
+        <label for="inputPassword3" class="control-label">Password</label>
+          <input type="password" class="form-control" id="inputPassword3"  name="pass" maxlength="16" placeholder="Enter Password" required>
         </div>
 				
 				<div class="form-group">

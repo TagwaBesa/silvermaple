@@ -43,7 +43,7 @@
 										include 'modules/teacherspage.php';
 										break;
 									case 'studentspage':
-										include 'modules/studentspage.php';
+										// include 'modules/studentspage.php';
 										break;
 									default:
 										include 'modules/login.php';

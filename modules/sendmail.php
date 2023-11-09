@@ -68,7 +68,7 @@ function checkAttendanceAndNotify($conn)
             $studentStmt = $conn->prepare($studentQuery);
             $studentStmt->bindParam(':student_id', $studentId, PDO::PARAM_INT);
             $studentStmt->bindParam(':subject_id', $subjectId, PDO::PARAM_INT);
-            $studentStmt->execute();
+            // $studentStmt->execute();
             $studentResult = $studentStmt->fetch(PDO::FETCH_ASSOC);
 
             if (!empty($studentResult)) {
@@ -98,6 +98,6 @@ function checkAttendanceAndNotify($conn)
 }
 ?>
 
-<!-- ################################################################################################## -->
+<!-- ###################################################################################### -->
 
 
