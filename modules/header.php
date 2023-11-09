@@ -22,7 +22,7 @@
       h1{
         margin-top:0;
         padding: 20px;
-        background-color: blue;
+        background-color: #067fa0;
         color:white;
         text-align: center;
       }

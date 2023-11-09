@@ -3,13 +3,12 @@
 include 'config1.php';
 require 'sendmail.php';
 
-// Check if the student is not logged in, then redirect to the login page
-
 $present = 0;
 $absent = 0;
 $nottaken = 0;
 $ttaken = 0;
-
+$strno=$_POST['rollno'];
+	
 // Retrieve the student ID, replace '1' with the actual source to get the student ID
 $studentId = 1; // Replace with the actual student ID retrieval method
 
@@ -32,10 +31,10 @@ if (count($result)) {
     $stmtAbsent->execute();
     $absentCount = $stmtAbsent->rowCount();
     
-    if ($absentCount >=3) {
+    if ($absentCount ==5) {
         // Echo a message once the student has been absent 3 or more times
         echo "Warning! You have been absent 3 or more times.";
-        checkAttendanceAndNotify($conn);
+        // checkAttendanceAndNotify($conn);
     }
     
 
@@ -68,16 +67,14 @@ if (count($result)) {
                 <tr>
                     <th>Subject</th>
                     <?php
-                    for ($k = 0; $k < count($result2); $k++) {
-                        $tmdat = $result2[$k]['date'];
-                        // Convert the date string to a Unix timestamp
-                        $timestamp = strtotime($tmdat);
-                    ?>
-                    <th><?php echo date("d-m-Y", $timestamp); ?></th>
-                    <?php
-                    }
-                    
-                    ?>
+for ($k = 0; $k < count($result2); $k++) {
+    $timestamp = $result2[$k]['date'];
+?>
+<th><?php echo date("d-m-Y", $timestamp); ?></th>
+<?php
+}
+?>
+
                     <th>Total</th>
                     <th>Grade</th>
                     <th colspan='2'>%</th>
@@ -204,36 +201,73 @@ if (count($result)) {
 ?>
 
 <?php
-// Create a line graph for the specified subject and student
-$subjectId = 2; // Replace with the actual subject ID
-$query = "SELECT date, grade FROM attendance
-          WHERE id = :subjectId AND sid = :studentId
+// Create a line graph for two subjects for the specified student
+$subjectId1 = 3; // Replace with the actual subject ID for the first subject
+$subjectId2 = 2; // Replace with the actual subject ID for the second subject
+
+// Fetch data for the first subject
+$query1 = "SELECT date, grade FROM attendance
+          WHERE id = :subjectId1 AND sid = :studentId
           ORDER BY date";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':subjectId', $subjectId, PDO::PARAM_INT);
-$stmt->bindParam(':studentId', $studentId, PDO::PARAM_INT);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt1 = $conn->prepare($query1);
+$stmt1->bindParam(':subjectId1', $subjectId1, PDO::PARAM_INT);
+$stmt1->bindParam(':studentId', $studentId, PDO::PARAM_INT);
+$stmt1->execute();
+$result1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
-$graphData = [];
+// Fetch data for the second subject
+$query2 = "SELECT date, grade FROM attendance
+          WHERE id = :subjectId2 AND sid = :studentId
+          ORDER BY date";
+$stmt2 = $conn->prepare($query2);
+$stmt2->bindParam(':subjectId2', $subjectId2, PDO::PARAM_INT);
+$stmt2->bindParam(':studentId', $studentId, PDO::PARAM_INT);
+$stmt2->execute();
+$result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($result as $row) {
-    $graphData[] = [
+// Combine data for both subjects
+$graphData = [
+    'subject1' => [],
+    'subject2' => [],
+];
+
+foreach ($result1 as $row) {
+    $graphData['subject1'][] = [
         'date' => $row['date'],
         'grade' => $row['grade'],
     ];
 }
-?>
 
+foreach ($result2 as $row) {
+    $graphData['subject2'][] = [
+        'date' => $row['date'],
+        'grade' => $row['grade'],
+    ];
+}
+
+
+?>
 <script>
 // Use PHP to convert PHP data to JavaScript
 var graphData = <?php echo json_encode($graphData); ?>;
 
-// Extract dates and grades from the data
-var labels = graphData.map(function(dataPoint) {
-    return dataPoint.date;
+// Extract dates and grades from the data for each subject
+var subject1Data = graphData.subject1;
+var subject2Data = graphData.subject2;
+
+// Convert timestamps to date strings for the x-axis labels
+var labels1 = subject1Data.map(function(dataPoint) {
+    return new Date(dataPoint.date * 1000).toLocaleDateString();
 });
-var data = graphData.map(function(dataPoint) {
+var labels2 = subject2Data.map(function(dataPoint) {
+    return new Date(dataPoint.date * 1000).toLocaleDateString();
+});
+
+var data1 = subject1Data.map(function(dataPoint) {
+    return dataPoint.grade;
+});
+
+var data2 = subject2Data.map(function(dataPoint) {
     return dataPoint.grade;
 });
 
@@ -242,12 +276,18 @@ var ctx = document.getElementById('attendanceGraph').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: labels,
+        labels: labels1, 
         datasets: [{
-            label: 'Subject',
-            data: data,
-            fill: false,
+            label: 'Incisions',
+            data: data1,
+            fill: true,
             borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }, {
+            label: 'Delivery',
+            data: data2,
+            fill: true,
+            borderColor: 'rgb(192, 75, 192)', 
             tension: 0.1
         }]
     },
@@ -255,7 +295,7 @@ var myChart = new Chart(ctx, {
         scales: {
             y: {
                 beginAtZero: true,
-                max: 6 // Set your maximum grade here
+                max: 10 // Set your maximum grade here
             }
         }
     }

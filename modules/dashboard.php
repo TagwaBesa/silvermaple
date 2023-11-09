@@ -12,12 +12,12 @@
 	<div class="col-lg-5">
 		<div class="panel panel-danger">
 			<div class="panel-heading">
-			  <h3 class="panel-title text-center"><b>Pending Attendance</b></h3>
+			  <h3 class="panel-title text-center"><b>Past</b></h3>
 			</div>
 			<div class="panel-body text-center">
 				  <?php
 					  
-					  for($i = 1; $i < 8; $i++) {
+					  for($i = 1; $i < 5; $i++) {
 						  $dateCurrentYMD = date('Y-m-d', strtotime($todayYMD ." -$i day"));
 					  
 						  $queryTimeStamp = strtotime($dateCurrentYMD);
