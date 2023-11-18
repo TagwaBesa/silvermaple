@@ -165,7 +165,7 @@ if (isset($_POST['sbt_top'])) {
     if (isset($_POST['updateData']) && ($_POST['updateData'] == 1)) {
         // Update existing attendance data
         $id = $_POST['subject'];
-        $sid = $_SESSION['uid'];
+        $sid = $_SESSION['sid'];
         $p = 0;
         $st_sid = $_POST['st_sid'];
         $attt_aid = $_POST['att_id'];

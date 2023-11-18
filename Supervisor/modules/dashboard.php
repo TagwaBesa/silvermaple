@@ -110,7 +110,7 @@
        
 				
 				<div class="form-group">
-					<input type="submit" name="submit" class="btn btn-danger btn-block" style="border-radius:0%" value="Search">
+					<input type="submit" name="submit" class="btn" style="border-radius:0%" value="Search">
 				</div>
 				
 				<input type="hidden" name="student" value="y" />
@@ -119,30 +119,7 @@
 	</div>
 
 					</div>
-	<div class="col-lg-2">
-		<div class="panel panel-success">
-			<div class="panel-heading">
-			  <h3 class="panel-title text-center"><b>You Have:</b></h3>
-			</div>
-			<div class="panel-body text-center">
-			  <p><i class="fa fa-book"></i> <a href="index.php?page=studentinfo" style='text-decoration:none;'> <strong><span class="badge badge-pill badge-danger"><?php print $noOfSubject; ?></span></strong> Subject/s </a></p>
-				  <?php
-					  $studentQuery = "SELECT COUNT(DISTINCT sid) as student_count FROM `user_subject` INNER JOIN student_subject WHERE user_subject.id = student_subject.id AND user_subject.uid = $userId";
-					  $stmtStudent = $conn->prepare($studentQuery); 
-					  $stmtStudent->execute();
-					  $resultStudent = $stmtStudent->fetchAll(PDO::FETCH_ASSOC); 
-				  ?>
-				  
-				  <?php if(!empty($resultStudent)) : ?>
-					  <p><i class="fa fa-users"></i> <a href="index.php?page=studentinfo" style='text-decoration:none;'><strong><span class="badge badge-pill badge-danger"><?php print $resultStudent[0]['student_count'] ?></span></strong> Student/s</a></p>
-				  <?php else: ?>
-					  <p><i class="fa fa-users"></i> No Students assigned to you!</p>
-				  <?php endif; ?>
-			</div>
-		  </div>
-		  <div class="col-md-8 col-md-offset-3 col-lg-8">
-     
-    </div>
+	
 	</div>
 	
 </div>

@@ -1,6 +1,5 @@
 <?php
 include 'config1.php';
-
 $present = 0;
 $absent = 0;
 $nottaken = 0;
@@ -87,8 +86,8 @@ if (isset($_POST['rollno'])) {
                             ?>
                             <tr>
                                 <td>
-                                    <h6><a href="modules/subject_details.php?id=<?php echo $subid; ?>"><?php echo $sub; ?></a></h6>
-                                </td>
+                                <h6><a href="modules/subject_details.php?id=<?php echo $subid; ?>&rollno=<?php echo $rollno; ?>"><?php echo $sub; ?></a></h6>
+ </td>
                                 <?php
                                 for ($i = 0; $i < count($result2); $i++) {
                                     $tmdat = $result2[$i]['date'];
@@ -188,7 +187,7 @@ if (isset($_POST['rollno'])) {
 
 <?php
 // Create a line graph for two subjects for the specified student
-$subjectId1 = 3; // Replace with the actual subject ID for the first subject
+$subjectId1 = 1; // Replace with the actual subject ID for the first subject
 $subjectId2 = 2; // Replace with the actual subject ID for the second subject
 
 // Fetch data for the first subject

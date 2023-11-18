@@ -51,7 +51,7 @@ if(isset($_SESSION['sid'])) {
 	<div class="col-lg-5">
 		<div class="panel panel-danger">
 			<div class="panel-heading">
-			  <h3 class="panel-title text-center"><b>Enter your Roll Number</b></h3>
+			  <!-- <h3 class="panel-title text-center"><b>Enter your Roll Number</b></h3> -->
 			</div>
 			<div class="panel-body text-center">
 			<form class="form-horizontal" action="index.php" method="post" id="studentForm" data-toggle="validator">
