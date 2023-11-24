@@ -24,4 +24,7 @@
 	// echo "Connection is there<br/>";
 	$conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
+
+
+	
 ?>

@@ -86,7 +86,7 @@
 			
                 <a href="Admin/index.php">Admin Log In</a>
                 <a href="Student/index.php">Student Log In</a>
-                <a href="Supervisor/index.php">Instructor Log In</a>
+                <a href="Supervisor/index.php">Supervisor Log In</a>
             </div>
         </div>
     </div>

@@ -2,8 +2,6 @@
 include 'config1.php';
 include 'header.php';
 
-// include 'nav.php';
-
 // Assuming you have the subject ID and roll number from the URL parameters
 $subid = $_GET['id'];
 $rollno = $_GET['rollno'];
@@ -26,7 +24,7 @@ $studentName = $studentResult['name'];
 $studentId = $studentResult['sid'];
 
 // Retrieve attendance details for the specific subject and student
-$attendanceQuery = "SELECT date, grade, ispresent, comment FROM attendance WHERE sid = :studentId AND id = :subid";
+$attendanceQuery = "SELECT date, grade, ispresent, comment, time FROM attendance WHERE sid = :studentId AND id = :subid";
 $attendanceStmt = $conn->prepare($attendanceQuery);
 $attendanceStmt->bindParam(':studentId', $studentId, PDO::PARAM_INT);
 $attendanceStmt->bindParam(':subid', $subid, PDO::PARAM_INT);
@@ -93,9 +91,9 @@ $attendedClasses = array_reduce($attendanceResult, function ($carry, $item) {
             <thead>
                 <tr>
                     <th>Date</th>
-                    
                     <th>Grade</th>
                     <th>Comment</th>
+                    <th>Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,12 +103,14 @@ $attendedClasses = array_reduce($attendanceResult, function ($carry, $item) {
                         $date = date("d-m-Y", date($attendanceRow['date']));
                         $presence = 'Present';
                         $comment = $attendanceRow['comment'];
-                        $grade=$attendanceRow['grade'];
+                        $grade = $attendanceRow['grade'];
+                        $time = date("H:i", strtotime($attendanceRow['time']));
                 ?>
                 <tr>
                     <td><?php echo $date; ?></td>
                     <td><?php echo $grade; ?></td>
                     <td><?php echo $comment; ?></td>
+                    <td><?php echo $time; ?></td>
                 </tr>
                 <?php
                     }

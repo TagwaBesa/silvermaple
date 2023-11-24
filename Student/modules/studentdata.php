@@ -9,12 +9,14 @@ $strno = $_POST['rollno'];
 if (isset($_POST['rollno'])) {
     $rollno = $_POST['rollno'];
 
+
     // Retrieve the student ID based on the provided roll number
     $sql = "SELECT name, sid, rollno FROM student WHERE rollno = :rollno";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':rollno', $rollno, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
     if (count($result)) {
         $tempnm = $result[0]['name'];
@@ -26,7 +28,10 @@ if (isset($_POST['rollno'])) {
         $stmtAbsent->bindParam(':sid', $tempid, PDO::PARAM_INT);
         $stmtAbsent->execute();
         $absentCount = $stmtAbsent->rowCount();
+       
     }
+    $studentId = $tempid;
+    
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -183,11 +188,12 @@ if (isset($_POST['rollno'])) {
 } else {
     header("location:index.php?student=invalid");
 }
-?>
+?>  
+
 
 <?php
 // Create a line graph for two subjects for the specified student
-$subjectId1 = 1; // Replace with the actual subject ID for the first subject
+$subjectId1 = 3; // Replace with the actual subject ID for the first subject
 $subjectId2 = 2; // Replace with the actual subject ID for the second subject
 
 // Fetch data for the first subject
@@ -214,6 +220,7 @@ $result2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 $graphData = [
     'subject1' => [],
     'subject2' => [],
+    'subject3' => [],
 ];
 
 foreach ($result1 as $row) {
@@ -229,58 +236,60 @@ foreach ($result2 as $row) {
         'grade' => $row['grade'],
     ];
 }
+
+
 ?>
 <script>
-    // Use PHP to convert PHP data to JavaScript
-    var graphData = <?php echo json_encode($graphData); ?>;
+// Use PHP to convert PHP data to JavaScript
+var graphData = <?php echo json_encode($graphData); ?>;
 
-    // Extract dates and grades from the data for each subject
-    var subject1Data = graphData.subject1;
-    var subject2Data = graphData.subject2;
+// Extract dates and grades from the data for each subject
+var subject1Data = graphData.subject1;
+var subject2Data = graphData.subject2;
 
-    // Convert timestamps to date strings for the x-axis labels
-    var labels1 = subject1Data.map(function (dataPoint) {
-        return new Date(dataPoint.date * 1000).toLocaleDateString();
-    });
-    var labels2 = subject2Data.map(function (dataPoint) {
-        return new Date(dataPoint.date * 1000).toLocaleDateString();
-    });
+// Convert timestamps to date strings for the x-axis labels
+var labels1 = subject1Data.map(function(dataPoint) {
+    return new Date(dataPoint.date * 1000).toLocaleDateString();
+});
+var labels2 = subject2Data.map(function(dataPoint) {
+    return new Date(dataPoint.date * 1000).toLocaleDateString();
+});
 
-    var data1 = subject1Data.map(function (dataPoint) {
-        return dataPoint.grade;
-    });
+var data1 = subject1Data.map(function(dataPoint) {
+    return dataPoint.grade;
+});
 
-    var data2 = subject2Data.map(function (dataPoint) {
-        return dataPoint.grade;
-    });
+var data2 = subject2Data.map(function(dataPoint) {
+    return dataPoint.grade;
+});
 
-    var ctx = document.getElementById('attendanceGraph').getContext('2d');
+var ctx = document.getElementById('attendanceGraph').getContext('2d');
 
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels1,
-            datasets: [{
-                label: 'Subject 1',
-                data: data1,
-                fill: true,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }, {
-                label: 'Subject 2',
-                data: data2,
-                fill: true,
-                borderColor: 'rgb(192, 75, 192)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 10 // Set your maximum grade here
-                }
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels1, 
+        datasets: [{
+            label: 'Incisions',
+            data: data1,
+            fill: true,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }, {
+            label: 'Delivery',
+            data: data2,
+            fill: true,
+            borderColor: 'rgb(192, 75, 192)', 
+            tension: 0.1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 10 // Set your maximum grade here
             }
         }
-    });
+    }
+});
 </script>
