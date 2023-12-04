@@ -121,3 +121,4 @@ $attendedClasses = array_reduce($attendanceResult, function ($carry, $item) {
     </div>
 </body>
 </html>
+

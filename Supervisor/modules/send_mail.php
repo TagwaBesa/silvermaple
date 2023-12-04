@@ -110,7 +110,7 @@ function logEmailSent($conn, $email, $subjectId) {
   $stmtLogSent->bindParam(':subjectId', $subjectId, PDO::PARAM_INT);
 
   if ($stmtLogSent->execute()) {
-      echo "Email logged successfully for $email and subject $subjectId.<br>";
+    //   echo "Email logged successfully for $email and subject $subjectId.<br>";
   } else {
       echo "Error logging email for $email and subject $subjectId.<br>";
       print_r($stmtLogSent->errorInfo());
